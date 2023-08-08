@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  api:
+    # Add configuration here
+    build:
+      context: ./backend
+      dockerfile: ./deployment/Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 5432
+    depends_on:
+      - database
+
+  web:
+    # Add configuration here
+    build:
+      context: ./frontend
+      dockerfile: ./deployment/Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:4000
+
+  database:
+    # Add configuration here
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
